@@ -2,7 +2,9 @@ pragma solidity ^0.4.21;
 
 contract Payroll {
     uint salary = 1 ether;
-    address frank = 0x14723a09acff6d2a60dcdf7aa4aff308fddc160c;
+//    设置owner为合约的创建者
+    address owner = msg.sender;
+    address employee = 0x14723a09acff6d2a60dcdf7aa4aff308fddc160c;
     uint constant payDuration = 10 seconds;
     uint lastPayday = now;
 
@@ -19,7 +21,7 @@ contract Payroll {
     }
 
     function getPaid() {
-        if (msg.sender != frank) {
+        if (msg.sender != employee) {
             revert();
         }
         uint nextPayday = lastPayday + payDuration;
@@ -27,17 +29,27 @@ contract Payroll {
             revert();
         }
         lastPayday = nextPayday;
-        frank.transfer(salary);
+        employee.transfer(salary);
     }
 
 //    设置新的地址
-    function set(address newAddress) {
-        frank = newAddress;
+    function updateAddress(address e) {
+//        先校验调用者是否为owner，否则不可调用
+        require(msg.sender == owner);
+//        校验新的地址是否有效
+        require(e != 0x0);
+//        计算老员工应得到的工资
+        uint paySalary = salary * (now - lastPayday) / payDuration;
+        employee = e;
+        lastPayday = now;
+        employee.transfer(paySalary);
     }
 
 //    设置新的薪水
-    function set(uint newSalary) {
-        salary = newSalary;
+    function updateSalary(uint s) {
+//        先校验调用者是否为owner，否则不可调用
+        require(msg.sender == owner);
+        salary = s * 1 ether;
     }
 
 }
