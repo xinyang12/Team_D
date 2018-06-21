@@ -19,7 +19,7 @@ contract Payroll {
         _;
     }
 
-    function updateEmployee(address _employee, uint _salary) public onlyOwner {
+    function updateEmployee(address _employee, uint _salaryInEther) public onlyOwner {
         // Sending remaining salary to the previous employee.
         if (employee != 0x0) {
             uint payment = salary * (now - lastPayday) / PAY_DURATION;
@@ -27,17 +27,17 @@ contract Payroll {
         }
 
         employee = _employee;
-        salary = _salary * 1 ether;
+        salary = _salaryInEther * 1 ether;
         lastPayday = now;
     }
 
     /// @dev Update salary for the same employee.
-    function updateSalary(uint _salary) public onlyOwner {
+    function updateSalary(uint _salaryInEther) public onlyOwner {
         // No-op if no change.
-        if (_salary * 1 ether == salary) {
+        if (_salaryInEther * 1 ether == salary) {
             return;
         }
-        updateEmployee(employee, _salary);
+        updateEmployee(employee, _salaryInEther);
     }
 
     /// @dev Only update the address, not changing employee.
@@ -47,7 +47,7 @@ contract Payroll {
         if (_employee == employee) {
             return;
         }
-        updateEmployee(_employee, salary);
+        updateEmployee(_employee, salary / 1 ether);
     }
 
     function addFund() public payable returns (uint) {
