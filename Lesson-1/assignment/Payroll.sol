@@ -33,13 +33,21 @@ contract Payroll {
 
     /// @dev Update salary for the same employee.
     function updateSalary(uint _salary) public onlyOwner {
-        salary = _salary;
+        // No-op if no change.
+        if (_salary * 1 ether == salary) {
+            return;
+        }
+        updateEmployee(employee, _salary);
     }
 
     /// @dev Only update the address, not changing employee.
     function updateAddress(address _employee) public onlyOwner {
         require(_employee != 0x0);
-        employee = _employee;
+        // No-op if same employee.
+        if (_employee == employee) {
+            return;
+        }
+        updateEmployee(_employee, salary);
     }
 
     function addFund() public payable returns (uint) {
