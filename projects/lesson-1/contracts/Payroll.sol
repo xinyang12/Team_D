@@ -43,13 +43,12 @@ contract Payroll{
         }
         
     }
-    
-    function setEmployInfo(address addrEmployee) {
+    function updateEmployeeAddress(address newAddress) {
         
         if(msg.sender != employer){
             revert();
         }
-        if(employee == addrEmployee){
+        if(employee == newAddress){
             return;
         }
         
@@ -58,7 +57,7 @@ contract Payroll{
             employee.transfer(payLastEmploy);
         }
         
-        employee = addrEmployee;
+        employee = newAddress;
         lastPayday = now;
         
     }
