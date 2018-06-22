@@ -61,8 +61,7 @@ contract Payroll{
         lastPayday = now;
         
     }
-    
-    function changeSalary(uint employeeSalary) {
+    function updateEmployeeSalary(uint newSalary) {
         
         if(msg.sender != employer){
             revert();
@@ -74,7 +73,7 @@ contract Payroll{
             employee.transfer(payLastEmploy);
         }
         
-        salary = employeeSalary * 1 ether;
+        salary = newSalary * 1 ether;
         lastPayday = now;
         
         
