@@ -11,7 +11,7 @@ contract Payroll {
     address employee;
     uint lastPayday;
 
-    constructor() public {
+    function Payroll() public {
         owner = msg.sender;
     }
 

@@ -15,7 +15,7 @@ contract Payroll {
     Employee[] employees;
     uint totalSalary;
 
-    constructor() payable public {
+    function Payroll() payable public {
         owner = msg.sender;
     }
 
