@@ -4,17 +4,14 @@ contract('Payroll', function (accounts) {
   const owner = accounts[0]
   const employee = accounts[1]
   const guest = accounts[5]
-  const salray = 1;
+  const salary = 1;
   const runway = 2;
   const payDuration = (30 + 1) * 86400;
-  const fund = runway * salray;
+  const fund = runway * salary;
 
-  it("Test getPaid()", function () {
-    var payroll;
-    return Payroll.deployed.call(owner, {from: owner, value: web3.toWei(fund, 'ether')}).then(instance => {
-      payroll = instance;
-      return payroll.updateEmployeeAddress(employee, {from: owner});
-    }).then(() => {
+  it("Test getPaid()", async function () {
+    var payroll = await Payroll.new();
+    return payroll.updateEmployeeAddress(employee, {from: owner}).then(() => {
       return payroll.addFund({from: owner, value: web3.toWei(fund, 'ether')});
     }).then(() => {
       return payroll.calculateRunway();
@@ -30,12 +27,9 @@ contract('Payroll', function (accounts) {
     });
   });
 
-  it("Test getPaid() before duration", function () {
-    var payroll;
-    return Payroll.deployed.call(owner, {from: owner, value: web3.toWei(fund, 'ether')}).then(instance => {
-      payroll = instance;
-      return payroll.updateEmployeeAddress(employee, {from: owner});
-    }).then(() => {
+  it("Test getPaid() before duration", async function () {
+    var payroll = await Payroll.new();
+    return payroll.updateEmployeeAddress(employee, {from: owner}).then(() => {
       return payroll.addFund({from: owner, value: web3.toWei(fund, 'ether')});
     }).then(() => {
       return payroll.calculateRunway();
@@ -49,12 +43,9 @@ contract('Payroll', function (accounts) {
     });
   });
 
-  it("Test getPaid() by a non-employee", function () {
-    var payroll;
-    return Payroll.deployed.call(owner, {from: owner, value: web3.toWei(fund, 'ether')}).then(instance => {
-      payroll = instance;
-      return payroll.updateEmployeeAddress(employee, {from: owner});
-    }).then(() => {
+  it("Test getPaid() by a non-employee", async function () {
+    var payroll = await Payroll.new();
+    return payroll.updateEmployeeAddress(employee, {from: owner}).then(() => {
       return payroll.addFund({from: owner, value: web3.toWei(fund, 'ether')});
     }).then(() => {
       return payroll.calculateRunway();
@@ -67,4 +58,5 @@ contract('Payroll', function (accounts) {
       assert.include(error.toString(), "Error: VM Exception while processing transaction: revert", "Should not call getPaid() by a non-employee");
     });
   });
+
 });
